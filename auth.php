@@ -2,7 +2,7 @@
 session_start();
 $usersFile = 'users.json';
 
-// Read or initialize users
+
 $users = file_exists($usersFile) ? json_decode(file_get_contents($usersFile), true) : [];
 
 $username = $_POST['username'];

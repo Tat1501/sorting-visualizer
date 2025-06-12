@@ -220,7 +220,7 @@ async function runSort() {
     execution_time_ms: result?.execution_time_ms ?? executionTime
   };
 
-  // Enable the save button
+  
   document.getElementById("saveBtn").disabled = false;
 }
 
@@ -240,15 +240,15 @@ function saveSortDetails() {
   .then(response => response.json())
   .then(data => {
     if (data.success) {
-      alert("✅ Sort details saved successfully in the database!");
-      document.getElementById("saveBtn").disabled = true; // disable after save
+      alert(" Sort details saved successfully in the database!");
+      document.getElementById("saveBtn").disabled = true; 
     } else {
-      alert("❌ Failed to save sort details: " + (data.message || "Unknown error"));
+      alert(" Failed to save sort details: " + (data.message || "Unknown error"));
     }
   })
   .catch(err => {
     console.error("Error:", err);
-    alert("❌ Error occurred while saving sort details. Check console for details.");
+    alert(" Error occurred while saving sort details. Check console for details.");
   });
 }
 

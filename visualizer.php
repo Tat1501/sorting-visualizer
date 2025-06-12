@@ -12,7 +12,7 @@ $isLoggedIn = isset($_SESSION['username']);
   <title>Sorting Visualizer</title>
   <link rel="stylesheet" href="style.css">
   <style>
-    /* Reset and base styles */
+    
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       background: #f0f2f5;
@@ -189,7 +189,7 @@ $isLoggedIn = isset($_SESSION['username']);
       top: 10rem;
     }
 
-    .loginForm{
+    .loginForm {
       padding: 30px;
     }
 
@@ -314,17 +314,29 @@ $isLoggedIn = isset($_SESSION['username']);
       document.getElementById(modalId).style.display = "none";
     }
 
+
     document.getElementById("loginForm").addEventListener("submit", function (e) {
       e.preventDefault();
       const formData = new FormData(this);
-      fetch("login.php", { method: "POST", body: formData })
-        .then(res => res.json())
-        .then(data => {
-          if (data.success) {
-            alert("Login successful!");
-            location.reload();
-          } else {
-            alert("Invalid credentials");
+
+      fetch("login.php", {
+        method: "POST",
+        body: JSON.stringify(Object.fromEntries(formData)),
+        headers: { 'Content-Type': 'application/json' }
+      })
+        .then(res => res.text())
+        .then(text => {
+          try {
+            const data = JSON.parse(text);
+            if (data.success) {
+              alert("Login successful!");
+              location.reload();
+            } else {
+              alert(data.message || "Invalid credentials");
+            }
+          } catch (err) {
+            console.error("Login JSON parse error:", err, text);
+            alert("Login failed: Invalid server response");
           }
         });
     });
@@ -332,14 +344,25 @@ $isLoggedIn = isset($_SESSION['username']);
     document.getElementById("signupForm").addEventListener("submit", function (e) {
       e.preventDefault();
       const formData = new FormData(this);
-      fetch("signup.php", { method: "POST", body: formData })
-        .then(res => res.json())
-        .then(data => {
-          if (data.success) {
-            alert("Signup successful! Please login.");
-            closeModal("signupModal");
-          } else {
-            alert("Signup failed: " + data.message);
+
+      fetch("signup.php", {
+        method: "POST",
+        body: JSON.stringify(Object.fromEntries(formData)),
+        headers: { 'Content-Type': 'application/json' }
+      })
+        .then(res => res.text())
+        .then(text => {
+          try {
+            const data = JSON.parse(text);
+            if (data.success) {
+              alert("Signup successful! Please login.");
+              closeModal("signupModal");
+            } else {
+              alert(data.message || "Signup failed");
+            }
+          } catch (err) {
+            console.error("Signup JSON parse error:", err, text);
+            alert("Signup failed: Invalid server response");
           }
         });
     });
